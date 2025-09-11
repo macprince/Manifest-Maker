@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys
-import os
 import logging
 import json
 import gspread
@@ -10,7 +9,7 @@ import plistlib
 if __name__ == '__main__':
 
     def local_path(file):
-        return os.path.abspath(os.path.join(sys.path[0],file))
+        return Path(__file__).resolve().parent / file
 
     # Load in config file
     config = local_path("config.json")
