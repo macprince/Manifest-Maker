@@ -1,15 +1,30 @@
 #!/usr/bin/env python3
-
+import sys
+import os
+import logging
+import json
 import gspread
 from pathlib import Path
 import plistlib
 
-SPREADSHEET_ID = "1LfQKh3kn3gHf2IwtCKTx2tachnLfieQdqErn6tDLMsM"
-
 if __name__ == '__main__':
 
+    def local_path(file):
+        return os.path.abspath(os.path.join(sys.path[0],file))
+
+    # Load in config file
+    config = local_path("config.json")
+    try:
+        with open(config) as config_file:
+            settings = json.load(config_file)
+    except IOError:
+        logging.error("No config.json file found! Please create one!")
+        sys.exit(2)
+
+    sheets = settings['sheets']
+
     gc = gspread.oauth()
-    workbook = gc.open_by_key(SPREADSHEET_ID)
+    workbook = gc.open_by_key(sheets['spreadsheet_id'])
     worksheet = workbook.worksheet("Devices")
     data = worksheet.get_all_records(numericise_ignore=['all'])
 
