@@ -33,27 +33,18 @@ if __name__ == '__main__':
         manifests_path.mkdir(parents=True, exist_ok=True)
         for row in data:
             pl = dict()
-            pl['display_name'] = row['Name']
+            pl['display_name'] = row.get('Name',"")
+            pl['asset_tag'] = row.get('Asset',"")
+            pl['notes'] = row.get('Notes',"")
 
-            if row['Asset'] != "":
-                pl['asset_tag'] = row['Asset']
-
-            if row['Included Manifests'] != "":
-                pl['included_manifests'] = row['Included Manifests'].split(",")
+            pl['included_manifests'] = row.get("Included Manifests","").split(",")
+            pl['managed_installs'] = row.get("Managed Installs","").split(",")
+            pl['optional_installs'] = row.get("Optional Installs","").split(",")
 
             if row['Catalogs'] != "":
                 pl['catalogs'] = row['Catalogs'].split(",")
             else:
                 pl['catalogs'] = ['production']
-
-            if row['Managed Installs'] != "":
-                pl['managed_installs'] = row['Managed Installs'].split(",")
-            
-            if row['Optional Installs'] != "":
-                pl['optional_installs'] = row['Optional Installs'].split(",")
-
-            if row['Notes'] != "":
-                pl['notes'] = row['Notes']
 
             manifest = manifests_path / row['Serial'] 
             print(f"Creating manifest for {row['Serial']}")
